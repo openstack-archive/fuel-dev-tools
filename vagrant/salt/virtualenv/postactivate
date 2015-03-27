@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/bin/bash
 #    Copyright 2015 Mirantis, Inc.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -13,16 +13,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import setuptools
+export WORK_DIR=/sources/fuel-web
 
-# In python < 2.7.4, a lazy loading of package `pbr` will break
-# setuptools if some other modules registered functions in `atexit`.
-# solution from: http://bugs.python.org/issue15881#msg170215
-try:
-    import multiprocessing  # noqa
-except ImportError:
-    pass
+export PYTHONPATH=$WORK_DIR/nailgun
 
-setuptools.setup(
-    setup_requires=['pbr'],
-    pbr=True)
+. /etc/profile.d/rvm.sh
+
+cd $WORK_DIR
