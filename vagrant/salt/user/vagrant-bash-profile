@@ -1,0 +1,11 @@
+case $- in *i*) . ~/.bashrc;; esac
+
+if [[ $TERM = "screen" ]] && [[ $(ps -p $PPID -o comm=) = "tmux" ]]; then
+    mkdir $HOME/logs 2> /dev/null
+    logname="$(date '+%d%m%Y%H%M%S').tmux.log"
+    export TMUX_LOG_FILE=$HOME/logs/${logname}
+    script -f $TMUX_LOG_FILE
+
+    exit
+fi
+
