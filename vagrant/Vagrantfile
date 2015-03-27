@@ -1,0 +1,80 @@
+#    Copyright 2013-2014 Mirantis, Inc.
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # Every Vagrant virtual environment requires a box to build off of.
+  config.vm.box = "ubuntu1404"
+
+  # The url from where the 'config.vm.box' box will be fetched if it
+  # doesn't already exist on the user's system.
+  config.vm.box_url = "https://oss-binaries.phusionpassenger.com/vagrant/boxes/latest/ubuntu-14.04-amd64-vbox.box"
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # config.vm.network :forwarded_port, guest: 80, host: 8080
+  config.vm.network :forwarded_port, guest: 80, host: 8280
+  config.vm.network :forwarded_port, guest: 8000, host: 8200
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  config.vm.network :private_network, ip: "192.168.60.10"
+
+  # run:
+  # vagrant rsync-auto
+  # to fire the service for automatic rsync synchronization
+  config.vm.synced_folder './sources', '/sources', type: "rsync", rsync__auto: true,
+    rsync__args: ["--verbose", "--archive", "-z", "--delete"],
+    rsync__exclude: [
+        '*/.tox',
+        'nailgun/static/js/libs/bower',
+        'nailgun/node_modules',
+        'test_run'
+    ],
+    create: true
+
+  # Provider-specific configuration so you can fine-tune various
+  # backing providers for Vagrant. These expose provider-specific options.
+  # Example for VirtualBox:
+  #
+  config.vm.provider :virtualbox do |vb|
+    vb.name = "vagrant-mirantis-test"
+    #   # Don't boot with headless mode
+    #   vb.gui = true
+    #
+    # Use VBoxManage to customize the VM. For example to change memory:
+    vb.customize ["modifyvm", :id, "--ioapic", "on", "--memory", "1024"]
+  end
+
+  ## For masterless, mount your salt file root
+  config.vm.synced_folder "salt/", "/srv/salt/"
+
+  # Make LC_ALL default to en_US.UTF-8 instead of en_US.
+  # See: https://github.com/mitchellh/vagrant/issues/1188
+  config.vm.provision "shell", inline: 'echo \'LC_ALL="en_US.UTF-8"\' > /etc/default/locale'
+
+  ## Use all the defaults:
+  config.vm.provision :salt do |salt|
+
+    salt.minion_config = "salt_minion"
+    salt.colorize = true
+    salt.log_level = "all"
+    #salt.run_highstate = true
+
+  end
+
+end
