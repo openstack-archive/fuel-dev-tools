@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/bin/bash
 #    Copyright 2015 Mirantis, Inc.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -13,16 +13,13 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import setuptools
+. /etc/bash_completion.d/virtualenvwrapper
 
-# In python < 2.7.4, a lazy loading of package `pbr` will break
-# setuptools if some other modules registered functions in `atexit`.
-# solution from: http://bugs.python.org/issue15881#msg170215
-try:
-    import multiprocessing  # noqa
-except ImportError:
-    pass
+workon fuel
 
-setuptools.setup(
-    setup_requires=['pbr'],
-    pbr=True)
+pip install /sources/fuel-web/shotgun  # this Fuel project is listed in setup.py requirements
+pip install -r /sources/fuel-web/nailgun/requirements.txt
+
+pip install tox
+pip install ipython
+pip install pudb

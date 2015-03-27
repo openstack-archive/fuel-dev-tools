@@ -38,7 +38,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'fuel-dev-tools'
-copyright = u'2013, OpenStack Foundation'
+copyright = u'2015, Mirantis Inc.'
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
 add_function_parentheses = True

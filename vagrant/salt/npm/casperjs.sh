@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/bin/bash
 #    Copyright 2015 Mirantis, Inc.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -13,16 +13,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import setuptools
-
-# In python < 2.7.4, a lazy loading of package `pbr` will break
-# setuptools if some other modules registered functions in `atexit`.
-# solution from: http://bugs.python.org/issue15881#msg170215
-try:
-    import multiprocessing  # noqa
-except ImportError:
-    pass
-
-setuptools.setup(
-    setup_requires=['pbr'],
-    pbr=True)
+cd $HOME
+git clone git://github.com/n1k0/casperjs.git
+cd casperjs
+git checkout tags/1.0.0-RC4
+sudo ln -sf `pwd`/bin/casperjs /usr/local/bin/casperjs
