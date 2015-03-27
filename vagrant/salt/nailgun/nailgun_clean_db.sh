@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/bin/bash
 #    Copyright 2015 Mirantis, Inc.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -13,16 +13,16 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import setuptools
+sudo su postgres -c "psql -c \"SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE pid <> pg_backend_pid() AND datname = 'nailgun';\""
+sudo su postgres -c "psql -c \"DROP DATABASE nailgun;\""
+sudo su postgres -c "psql -c \"CREATE DATABASE nailgun WITH OWNER nailgun;\""
 
-# In python < 2.7.4, a lazy loading of package `pbr` will break
-# setuptools if some other modules registered functions in `atexit`.
-# solution from: http://bugs.python.org/issue15881#msg170215
-try:
-    import multiprocessing  # noqa
-except ImportError:
-    pass
+. /etc/bash_completion.d/virtualenvwrapper
 
-setuptools.setup(
-    setup_requires=['pbr'],
-    pbr=True)
+workon fuel
+
+cd /sources/fuel-web/nailgun
+
+./manage.py syncdb
+./manage.py loaddefault # It loads all basic fixtures listed in settings.yaml
+./manage.py loaddata nailgun/fixtures/sample_environment.json  # Loads fake nodes
