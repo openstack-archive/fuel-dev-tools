@@ -13,16 +13,16 @@
 # under the License.
 
 """
-test_fuel-dev-tools
+test_fuel_dev_tools
 ----------------------------------
 
-Tests for `fuel-dev-tools` module.
+Tests for `fuel_dev_tools` module.
 """
 
-from fuel-dev-tools.tests import base
+from fuel_dev_tools.tests import base
 
 
-class TestFuel-dev-tools(base.TestCase):
+class TestFuelDevTools(base.TestCase):
 
     def test_something(self):
         pass
