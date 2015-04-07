@@ -66,6 +66,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder "pillar/", "/srv/pillar/"
   config.vm.synced_folder "salt/", "/srv/salt/"
 
+  ## Make LC_ALL default to en_US.UTF-8 instead of en_US.
+  config.vm.provision "shell", inline: 'echo \'LC_ALL="en_US.UTF-8"\' > /etc/default/locale'
+
   ## Use all the defaults:
   config.vm.provision :salt do |salt|
 
