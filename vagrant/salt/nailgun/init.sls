@@ -75,3 +75,20 @@ raemon-gem:
     - require:
       - cmd: packages-ruby-2.1
       - git: raemon-source
+
+python-fuel-command:
+  cmd.run:
+    - name: python setup.py develop
+    - cwd: /sources/python-fuelclient
+
+python-fuel-command-config-dir:
+  file.directory:
+    - name: /etc/fuel/client
+    - makedirs: True
+
+python-fuel-command-config:
+  file.managed:
+    - name: /etc/fuel/client/config.yaml
+    - source: salt://nailgun/client-config.yaml
+    - require:
+      - file: python-fuel-command-config-dir
