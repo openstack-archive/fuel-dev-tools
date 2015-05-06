@@ -65,6 +65,16 @@ tmux
 to a separate file for easier inspection of history. The file's name can be fetched in current
 active window from the `TMUX_LOG_FILE` variable (see `/home/vagrant/.bash_profile`).
 
+Astute
+----
+To run Ruby tests for `fuel-astute`:
+
+```
+cd /sources/fuel-astute
+rvm gemset use astute
+./run_tests.sh
+```
+
 TODO
 ----
 * eliminate the need for running `rsync-auto` and instead install the `rsync` service inside the Vagrant box
