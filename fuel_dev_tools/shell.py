@@ -27,6 +27,7 @@ import traceback
 from cliff import app
 from cliff import commandmanager
 
+from docker import astute
 from docker import nailgun
 from docker import nginx
 import exc
@@ -35,6 +36,18 @@ import info
 
 COMMANDS = {
     'info': info.Info,
+
+    'astute-id': astute.Id,
+    'astute-config': astute.Config,
+    'astute-dir': astute.Dir,
+    'astute-log': astute.Log,
+    'astute-restart': astute.Restart,
+    'astute-rsync': astute.Rsync,
+    'astute-shell': astute.Shell,
+    'astute-start': astute.Start,
+    'astute-stop': astute.Stop,
+    'astute-tail': astute.Tail,
+    'astute-volumes': astute.Volumes,
 
     'nailgun-id': nailgun.Id,
     'nailgun-config': nailgun.Config,
