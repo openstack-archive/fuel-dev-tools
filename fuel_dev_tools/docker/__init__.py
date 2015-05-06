@@ -102,7 +102,7 @@ class DockerMixin(object):
         iid = self.get_docker_id(get_exited=get_exited)
 
         iid = self.ssh_command(
-            "docker inspect -f '{{.ID}}' %s" % iid
+            "docker inspect -f '{{.Id}}' %s" % iid
         ).decode('utf-8').strip()
 
         return iid
@@ -239,6 +239,12 @@ class ShellCommand(DockerMixin, ssh.SSHMixin, command.Command):
 
     log = logging.getLogger(__name__)
 
+    def container_command(self, *commands):
+        return [
+            #'lxc-attach', '--name', self.get_full_docker_id()
+            'docker', 'exec', self.get_docker_id()
+        ] + list(commands)
+
     def get_parser(self, prog_name):
         parser = super(ShellCommand, self).get_parser(prog_name)
 
@@ -263,9 +269,7 @@ class ShellCommand(DockerMixin, ssh.SSHMixin, command.Command):
         if not command:
             command = '/bin/bash'
 
-        return self.ssh_command_interactive(
-            'lxc-attach', '--name', self.get_full_docker_id(), command
-        )
+        return self.ssh_command_interactive(self.container_command(command))
 
 
 class StartCommand(DockerMixin, ssh.SSHMixin, command.Command):
