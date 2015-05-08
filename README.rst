@@ -1,5 +1,5 @@
 ===============================
-fuel-dev-tools
+fuel-dev-tools suite
 ===============================
 
 Tools that make it easier to develop and work with OpenStack Fuel.
@@ -12,4 +12,5 @@ Tools that make it easier to develop and work with OpenStack Fuel.
 Features
 --------
 
-* TODO
+* [Vagrant environment](https://github.com/stackforge/fuel-dev-tools/tree/master/vagrant)
+* [fuel-dev-tools command](https://github.com/stackforge/fuel-dev-tools/tree/master/fuel_dev_tools)
