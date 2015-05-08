@@ -12,5 +12,10 @@ Tools that make it easier to develop and work with OpenStack Fuel.
 Features
 --------
 
-* [Vagrant environment](https://github.com/stackforge/fuel-dev-tools/tree/master/vagrant)
-* [fuel-dev-tools command](https://github.com/stackforge/fuel-dev-tools/tree/master/fuel_dev_tools)
+* Vagrant environment: https://github.com/stackforge/fuel-dev-tools/tree/master/vagrant>
+* fuel-dev-tools command: https://github.com/stackforge/fuel-dev-tools/tree/master/fuel_dev_tools
+
+TODO
+--------
+
+* add commands for managing VirtualBoxes -- move them from https://github.com/stackforge/fuel-main/tree/master/virtualbox
