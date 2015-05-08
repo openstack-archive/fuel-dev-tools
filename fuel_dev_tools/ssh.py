@@ -24,9 +24,6 @@ import exc
 SSH_PASSWORD_CHECKED = False
 
 
-print_verbose = six.print_
-
-
 # TODO(pkaminski): ssh_command should be in some utils, not necessarily
 # in this class?
 class SSHMixin(object):
@@ -42,8 +39,8 @@ class SSHMixin(object):
                     fabric.state.output[key] = False
 
     def send_identity(self):
-        print_verbose('Sending identity %s for passwordless authentication' %
-                      self.app_args.identity_file)
+        self.print_debug('Sending identity %s for passwordless authentication' %
+                         self.app_args.identity_file)
 
         with open('%s.pub' % self.app_args.identity_file) as f:
             contents = f.read()
@@ -51,7 +48,7 @@ class SSHMixin(object):
         result = fabric_api.run(
             "echo '%s' >> ~/.ssh/authorized_keys" % contents
         )
-        print_verbose(result)
+        self.print_debug(result)
 
         # And while we're here, let's fix /etc/hosts for which 10.20.0.2
         # points to some non-existing domain (with misconfigured reverse-DNS
@@ -61,11 +58,11 @@ class SSHMixin(object):
                 'IP': self.app_args.IP
             }
         )
-        print_verbose(result)
+        self.print_debug(result)
 
         # Need to restart after /etc/hosts change
         result = fabric_api.run('service sshd restart')
-        print_verbose(result)
+        self.print_debug(result)
 
         return result
 
@@ -97,13 +94,13 @@ class SSHMixin(object):
         return fabric_api.run(' '.join(args))
 
     def ssh_command_interactive(self, *args):
-        print_verbose("COMMAND: %r" % list(args))
+        self.print_debug("COMMAND: %r" % list(args))
 
         command = None
 
         if args:
             command = ' '.join(args)
 
-        print_verbose('interactive', command)
+        self.print_debug('interactive', command)
 
         fabric_api.open_shell(command=command)

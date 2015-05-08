@@ -91,7 +91,7 @@ class Rsync(DockerAstuteMixin, docker.RsyncCommand, docker.ShellCommand):
                 cmd
             ], shell=True)
 
-            six.print_(result)
+            self.print_debug(result)
         except subprocess.CalledProcessError as e:
             six.print_('GEM BUILD ERROR')
             six.print_(e.output)

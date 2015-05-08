@@ -19,11 +19,11 @@ from fabric.contrib import project
 
 class RsyncMixin(object):
     def rsync(self, source, target):
-        six.print_('RSYNC: %s --> %s' % (source, target))
+        self.print_debug('RSYNC: %s --> %s' % (source, target))
 
         result = project.rsync_project(
             local_dir=source,
             remote_dir=target
         )
 
-        six.print_(result.decode('utf-8'))
+        self.print_debug(result.decode('utf-8'))

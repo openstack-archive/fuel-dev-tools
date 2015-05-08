@@ -27,11 +27,11 @@ import traceback
 from cliff import app
 from cliff import commandmanager
 
-from docker import astute
-from docker import nailgun
-from docker import nginx
-import exc
-import info
+from fuel_dev_tools.docker import astute
+from fuel_dev_tools.docker import nailgun
+from fuel_dev_tools.docker import nginx
+from fuel_dev_tools import exc
+from fuel_dev_tools import info
 
 
 COMMANDS = {

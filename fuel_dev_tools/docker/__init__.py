@@ -17,8 +17,8 @@ import logging
 import os
 import six
 
-from cliff import command
 
+from fuel_dev_tools import command
 from fuel_dev_tools import exc
 from fuel_dev_tools import rsync
 from fuel_dev_tools import ssh
@@ -26,9 +26,6 @@ from fuel_dev_tools import ssh
 
 DOCKER_CONTAINER_PATH = '/var/lib/docker/containers/'
 DOCKER_DEVICEMAPPER_PATH = '/var/lib/docker/devicemapper/mnt/'
-
-# TODO(pkaminski)
-print_verbose = six.print_
 
 
 class DockerMixin(object):
@@ -73,17 +70,17 @@ class DockerMixin(object):
             self.container
         ).decode('utf-8')
 
-        print_verbose('FOUND CONTAINERS: %r' % up)
+        self.print_debug('FOUND CONTAINERS: %r' % up)
 
         if not up and get_exited:
-            print_verbose('Container not Up, trying Exited')
+            self.print_debug('Container not Up, trying Exited')
 
             up = self.ssh_command(
                 'docker ps -a | grep -i %s | grep Exited | cut -f 1 -d " "' %
                 self.container
             ).decode('utf-8')
 
-            print_verbose('FOUND CONTAINERS: %r' % up)
+            self.print_debug('FOUND CONTAINERS: %r' % up)
 
             if not up:
                 raise exc.DockerError(
@@ -124,39 +121,39 @@ class DockerMixin(object):
             'docker restart %s' % self.get_docker_id()
         )
 
-        print_verbose(result)
+        self.print_debug(result)
 
     def start_container(self):
         result = self.ssh_command(
             'docker start %s' % self.get_docker_id(get_exited=True)
         )
 
-        print_verbose(result)
+        self.print_debug(result)
 
     def stop_container(self):
         result = self.ssh_command(
             'docker stop %s' % self.get_docker_id()
         )
 
-        print_verbose(result)
+        self.print_debug(result)
 
 
-class IdCommand(DockerMixin, ssh.SSHMixin, command.Command):
+class IdCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
     def take_action(self, parsed_args):
         six.print_(self.get_docker_id(get_exited=True))
 
 
-class ConfigCommand(DockerMixin, ssh.SSHMixin, command.Command):
+class ConfigCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
     def take_action(self, parsed_args):
         six.print_(json.dumps(self.get_container_config(), indent=2))
 
 
-class DirCommand(DockerMixin, ssh.SSHMixin, command.Command):
+class DirCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
     def take_action(self, parsed_args):
         six.print_(self.get_container_directory())
 
 
-class LogCommand(DockerMixin, ssh.SSHMixin, command.Command):
+class LogCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
     def get_log_directory(self):
         raise NotImplementedError('No log directory for this command')
 
@@ -180,15 +177,15 @@ class LogCommand(DockerMixin, ssh.SSHMixin, command.Command):
         )
 
 
-class RestartCommand(DockerMixin, ssh.SSHMixin, command.Command):
+class RestartCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
     def take_action(self, parsed_args):
         self.restart_container()
 
 
-class RsyncCommand(rsync.RsyncMixin,
-                   DockerMixin,
+class RsyncCommand(DockerMixin,
+                   rsync.RsyncMixin,
                    ssh.SSHMixin,
-                   command.Command):
+                   command.BaseCommand):
     def pre_sync(self, parsed_args):
         pass
 
@@ -234,7 +231,7 @@ class RsyncCommand(rsync.RsyncMixin,
         self.post_sync(parsed_args)
 
 
-class ShellCommand(DockerMixin, ssh.SSHMixin, command.Command):
+class ShellCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
     default_command = None
 
     log = logging.getLogger(__name__)
@@ -272,17 +269,17 @@ class ShellCommand(DockerMixin, ssh.SSHMixin, command.Command):
         return self.ssh_command_interactive(self.container_command(command))
 
 
-class StartCommand(DockerMixin, ssh.SSHMixin, command.Command):
+class StartCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
     def take_action(self, parsed_args):
         self.start_container()
 
 
-class StopCommand(DockerMixin, ssh.SSHMixin, command.Command):
+class StopCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
     def take_action(self, parsed_args):
         self.stop_container()
 
 
-class TailCommand(DockerMixin, ssh.SSHMixin, command.Command):
+class TailCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
     def get_log_directory(self):
         raise NotImplementedError('No log directory for this command')
 
@@ -304,7 +301,7 @@ class TailCommand(DockerMixin, ssh.SSHMixin, command.Command):
         )
 
 
-class VolumesCommand(DockerMixin, ssh.SSHMixin, command.Command):
+class VolumesCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
     def take_action(self, parsed_args):
         six.print_(
             json.dumps(

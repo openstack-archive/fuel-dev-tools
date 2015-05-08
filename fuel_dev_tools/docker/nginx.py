@@ -13,7 +13,6 @@
 #    under the License.
 
 import os
-import six
 
 from fabric import api as fabric_api
 
@@ -63,7 +62,7 @@ class Rsync(DockerNginxMixin, docker.RsyncCommand):
     def build_gulp_static(self, source_dir):
         cwd = os.path.join(source_dir, 'nailgun')
 
-        six.print_(
+        self.print_debug(
             'Building gulp static in %s, temporary static dir is: %s...' % (
                 cwd,
                 self.temporary_build_dir
@@ -77,4 +76,4 @@ class Rsync(DockerNginxMixin, docker.RsyncCommand):
                 )
             )
 
-            six.print_(result)
+            self.print_debug(result)

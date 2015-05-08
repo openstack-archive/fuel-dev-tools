@@ -15,14 +15,14 @@
 import logging
 import six
 
-from cliff import command
+from fuel_dev_tools import command
 
 
 class BasicInfo(object):
     pass
 
 
-class Info(command.Command):
+class Info(command.BaseCommand):
     """Various useful information about the Fuel master node."""
 
     log = logging.getLogger(__name__)
