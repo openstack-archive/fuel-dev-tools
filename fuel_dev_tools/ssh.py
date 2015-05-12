@@ -18,7 +18,8 @@ import subprocess
 import fabric
 from fabric import api as fabric_api
 
-import exc
+from fuel_dev_tools import command
+from fuel_dev_tools import exc
 
 
 SSH_PASSWORD_CHECKED = False
@@ -31,8 +32,8 @@ class SSHMixin(object):
         super(SSHMixin, self).__init__(*args, **kwargs)
 
         if self.app_args:
-            fabric_api.env.host_string = self.app_args.IP
-            fabric_api.env.user = 'root'
+            fabric_api.env.host_string = '{0}:{1}'.format(self.app_args.ip, self.app_args.port)
+            fabric_api.env.user = self.app_args.user
 
             if not self.app_args.debug:
                 for key in fabric.state.output:
@@ -54,8 +55,8 @@ class SSHMixin(object):
         # points to some non-existing domain (with misconfigured reverse-DNS
         # lookups each SSH connection can be quite slow)
         result = fabric_api.run(
-            "sed -i 's/^%(IP)s.*/%(IP)s localhost/' /etc/hosts" % {
-                'IP': self.app_args.IP
+            "sed -i 's/^%(ip)s.*/%(ip)s localhost/' /etc/hosts" % {
+                'ip': self.app_args.ip
             }
         )
         self.print_debug(result)
@@ -77,9 +78,11 @@ class SSHMixin(object):
             try:
                 subprocess.check_output([
                     'ssh',
+                    '-p',
+                    self.app_args.port,
                     '-o',
                     'PasswordAuthentication=no',
-                    'root@%s' % self.app_args.IP,
+                    '%s@%s' % (self.app_args.user, self.app_args.ip),
                     'echo 1'
                 ], stderr=subprocess.STDOUT)
             except subprocess.CalledProcessError as e:
@@ -101,6 +104,11 @@ class SSHMixin(object):
         if args:
             command = ' '.join(args)
 
-        self.print_debug('interactive', command)
+        self.print_debug('interactive %s' % command)
 
         fabric_api.open_shell(command=command)
+
+
+class SSH(SSHMixin, command.BaseCommand):
+    def take_action(self, parsed_args):
+        self.ssh_command_interactive('')

@@ -50,6 +50,9 @@ class DockerMixin(object):
     def get_container_directory(self):
         iid = self.get_docker_id()
 
+        if not iid:
+            raise exc.DockerError('Docker ID could not be fetched')
+
         paths = self.ssh_command(
             'ls %s | grep %s' % (DOCKER_DEVICEMAPPER_PATH, iid)
         ).decode('utf-8')
@@ -266,7 +269,7 @@ class ShellCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
         if not command:
             command = '/bin/bash'
 
-        return self.ssh_command_interactive(self.container_command(command))
+        return self.ssh_command_interactive(*self.container_command(command))
 
 
 class StartCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):

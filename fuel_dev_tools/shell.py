@@ -32,10 +32,12 @@ from fuel_dev_tools.docker import nailgun
 from fuel_dev_tools.docker import nginx
 from fuel_dev_tools import exc
 from fuel_dev_tools import info
+from fuel_dev_tools import ssh
 
 
 COMMANDS = {
     'info': info.Info,
+    'ssh': ssh.SSH,
 
     'astute-id': astute.Id,
     'astute-config': astute.Config,
@@ -94,9 +96,19 @@ class ToolsApp(app.App):
             description, version)
 
         parser.add_argument(
-            '--IP',
+            '--ip',
             default='10.20.0.2',
             help='Fuel master node IP address'
+        )
+        parser.add_argument(
+            '-p', '--port',
+            default='22',
+            help='Fuel master node SSH port'
+        )
+        parser.add_argument(
+            '-U', '--user',
+            default='root',
+            help='Fuel master node SSH user'
         )
         parser.add_argument(
             '-I', '--identity-file',

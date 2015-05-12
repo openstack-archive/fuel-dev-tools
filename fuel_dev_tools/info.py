@@ -37,10 +37,10 @@ class Info(command.BaseCommand):
 
         six.print_('URLS:')
         for name, port, info in urls:
-            six.print_('{name:{fill}{align}{width}}http://{IP}:{port:{fill}'
+            six.print_('{name:{fill}{align}{width}}http://{ip}:{port:{fill}'
                        '{align}{width}}{info}'.format(
                            name=name,
-                           IP=self.app_args.IP,
+                           ip=self.app_args.ip,
                            port=port,
                            info=info,
                            fill=' ',
