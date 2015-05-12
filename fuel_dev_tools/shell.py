@@ -31,6 +31,7 @@ from fuel_dev_tools.docker import astute
 from fuel_dev_tools.docker import nailgun
 from fuel_dev_tools.docker import nginx
 from fuel_dev_tools.docker import postgres
+from fuel_dev_tools.docker import rabbitmq
 from fuel_dev_tools import exc
 from fuel_dev_tools import info
 from fuel_dev_tools import ssh
@@ -75,6 +76,17 @@ COMMANDS = {
     'postgres-stop': postgres.Stop,
     'postgres-tail': postgres.Tail,
     'postgres-volumes': postgres.Volumes,
+
+    'rabbitmq-id': rabbitmq.Id,
+    'rabbitmq-config': rabbitmq.Config,
+    'rabbitmq-dir': rabbitmq.Dir,
+    'rabbitmq-log': rabbitmq.Log,
+    'rabbitmq-restart': rabbitmq.Restart,
+    'rabbitmq-shell': rabbitmq.Shell,
+    'rabbitmq-start': rabbitmq.Start,
+    'rabbitmq-stop': rabbitmq.Stop,
+    'rabbitmq-tail': rabbitmq.Tail,
+    'rabbitmq-volumes': rabbitmq.Volumes,
 }
 
 

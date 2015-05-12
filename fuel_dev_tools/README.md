@@ -6,9 +6,9 @@ Command-line interface for interacting with Fuel Master node.
 
 ## Global options
 
-### `--IP`
+### `--IP`, `-P|--port`, `-U|--user`
 
-Specify IP of the Fuel master ISO (default is `10.20.0.2`).
+Specify IP, port and user of the Fuel master ISO (default is `10.20.0.2`).
 
 ### `-I`, `--identity-file`
 
