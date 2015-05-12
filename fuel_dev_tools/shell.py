@@ -30,6 +30,7 @@ from cliff import commandmanager
 from fuel_dev_tools.docker import astute
 from fuel_dev_tools.docker import nailgun
 from fuel_dev_tools.docker import nginx
+from fuel_dev_tools.docker import postgres
 from fuel_dev_tools import exc
 from fuel_dev_tools import info
 from fuel_dev_tools import ssh
@@ -63,6 +64,17 @@ COMMANDS = {
     'nailgun-stop': nailgun.Stop,
     'nailgun-tail': nailgun.Tail,
     'nailgun-volumes': nailgun.Volumes,
+
+    'postgres-id': postgres.Id,
+    'postgres-config': postgres.Config,
+    'postgres-dir': postgres.Dir,
+    'postgres-log': postgres.Log,
+    'postgres-restart': postgres.Restart,
+    'postgres-shell': postgres.Shell,
+    'postgres-start': postgres.Start,
+    'postgres-stop': postgres.Stop,
+    'postgres-tail': postgres.Tail,
+    'postgres-volumes': postgres.Volumes,
 }
 
 

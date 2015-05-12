@@ -245,6 +245,12 @@ class ShellCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
             'docker', 'exec', self.get_docker_id()
         ] + list(commands)
 
+    def container_command_interactive(self, *commands):
+        return [
+            #'lxc-attach', '--name', self.get_full_docker_id()
+            'docker', 'exec', '-it', self.get_docker_id()
+        ] + list(commands)
+
     def get_parser(self, prog_name):
         parser = super(ShellCommand, self).get_parser(prog_name)
 
@@ -269,7 +275,9 @@ class ShellCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
         if not command:
             command = '/bin/bash'
 
-        return self.ssh_command_interactive(*self.container_command(command))
+        return self.ssh_command_interactive(
+            *self.container_command_interactive(command)
+        )
 
 
 class StartCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
