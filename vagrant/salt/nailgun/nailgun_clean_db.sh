@@ -25,4 +25,5 @@ cd /sources/fuel-web/nailgun
 
 ./manage.py syncdb
 ./manage.py loaddefault # It loads all basic fixtures listed in settings.yaml
+./manage.py loadfakedeploymenttasks  # Loads fake deployment tasks
 ./manage.py loaddata nailgun/fixtures/sample_environment.json  # Loads fake nodes

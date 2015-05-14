@@ -36,6 +36,13 @@ nailgun-db:
     - source: salt://nailgun/nailgun_clean_db.sh
     - mode: 0777
 
+create-database:
+  cmd.run:
+    - name: /usr/bin/nailgun_clean_db.sh
+    - user: vagrant
+    - require:
+      - file: /usr/bin/nailgun_clean_db.sh
+
 raemon-source:
   git.latest:
     - name: https://github.com/nulayer/raemon.git
