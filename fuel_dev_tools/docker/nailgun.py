@@ -12,8 +12,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from fuel_dev_tools import command
 from fuel_dev_tools import docker
 from fuel_dev_tools import info
+from fuel_dev_tools import ssh
 
 
 class DockerNailgunMixin(object):
@@ -39,6 +41,45 @@ class Id(DockerNailgunMixin, docker.IdCommand):
 
 class Config(DockerNailgunMixin, docker.ConfigCommand):
     """Print Docker container config."""
+
+
+class DBReset(DockerNailgunMixin,
+              docker.DockerMixin,
+              ssh.SSHMixin,
+              command.BaseCommand):
+    """Reset the whole database to defaults."""
+    def take_action(self, parsed_args):
+        from fuel_dev_tools.docker import postgres
+
+        reset_sql = """
+SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE pid <> pg_backend_pid() AND datname = 'nailgun';
+DROP DATABASE nailgun;
+CREATE DATABASE nailgun WITH OWNER nailgun;
+        """
+
+        p = postgres.Shell(self.app, self.app_args)
+
+        cmd = [
+            'echo', '"{}"'.format(reset_sql),
+            '> {}/rootfs/tmp/reset-db.sql'.format(p.get_container_directory()),
+        ]
+        p.ssh_command(*cmd)
+
+        cmd = p.container_command(
+            'chown', 'postgres:postgres', '/tmp/reset-db.sql'
+        )
+        p.ssh_command(*cmd)
+
+        cmd = p.container_command(
+            'su', '-', 'postgres',
+            '-c', '"cat /tmp/reset-db.sql | psql -d nailgun"'
+        )
+        p.ssh_command(*cmd)
+
+        cmd = self.container_command('manage.py', 'syncdb')
+        p.ssh_command(*cmd)
+
+        cmd = self.container_command('manage.py', 'loaddefault')
 
 
 class Dir(DockerNailgunMixin, docker.DirCommand):

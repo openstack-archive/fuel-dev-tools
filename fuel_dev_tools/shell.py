@@ -55,6 +55,7 @@ COMMANDS = {
 
     'nailgun-id': nailgun.Id,
     'nailgun-config': nailgun.Config,
+    'nailgun-db-reset': nailgun.DBReset,
     'nailgun-dir': nailgun.Dir,
     'nailgun-log': nailgun.Log,
     'nailgun-restart': nailgun.Restart,

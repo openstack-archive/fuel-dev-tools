@@ -31,6 +31,18 @@ DOCKER_DEVICEMAPPER_PATH = '/var/lib/docker/devicemapper/mnt/'
 class DockerMixin(object):
     container = None
 
+    def container_command(self, *commands):
+        return [
+            #'lxc-attach', '--name', self.get_full_docker_id()
+            'docker', 'exec', self.get_docker_id()
+        ] + list(commands)
+
+    def container_command_interactive(self, *commands):
+        return [
+            #'lxc-attach', '--name', self.get_full_docker_id()
+            'docker', 'exec', '-it', self.get_docker_id()
+        ] + list(commands)
+
     def get_container_config(self):
         d = self.get_container_config_directory()
 
@@ -238,18 +250,6 @@ class ShellCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
     default_command = None
 
     log = logging.getLogger(__name__)
-
-    def container_command(self, *commands):
-        return [
-            #'lxc-attach', '--name', self.get_full_docker_id()
-            'docker', 'exec', self.get_docker_id()
-        ] + list(commands)
-
-    def container_command_interactive(self, *commands):
-        return [
-            #'lxc-attach', '--name', self.get_full_docker_id()
-            'docker', 'exec', '-it', self.get_docker_id()
-        ] + list(commands)
 
     def get_parser(self, prog_name):
         parser = super(ShellCommand, self).get_parser(prog_name)
