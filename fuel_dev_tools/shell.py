@@ -39,6 +39,7 @@ from fuel_dev_tools import ssh
 
 COMMANDS = {
     'info': info.Info,
+    'send-identity': ssh.SendIdentity,
     'ssh': ssh.SSH,
 
     'astute-id': astute.Id,

@@ -12,10 +12,12 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import os
 import six
 import subprocess
 
 import fabric
+from fabric import context_managers
 from fabric import api as fabric_api
 
 from fuel_dev_tools import command
@@ -99,14 +101,35 @@ class SSHMixin(object):
     def ssh_command_interactive(self, *args):
         self.print_debug("COMMAND: %r" % list(args))
 
-        command = None
+        # NOTE: fabric's open_shell is broken: it's TERM or something like
+        # that that breaks arrow keys for browsing history in Bash, etc.
+
+        #command = None
+
+        #if args:
+            #command = ' '.join(args)
+
+        #self.print_debug('interactive %s' % command)
+
+        #fabric_api.open_shell(command=command)
+
+        commands = [
+            'ssh', '-t',
+            '{}@{}'.format(self.app_args.user, self.app_args.ip),
+            '-p', self.app_args.port,
+            '-i', self.app_args.identity_file,
+        ]
 
         if args:
-            command = ' '.join(args)
+            commands.append('-C')
+            commands.extend(list(args))
 
-        self.print_debug('interactive %s' % command)
+        os.execvp('ssh', commands)
 
-        fabric_api.open_shell(command=command)
+
+class SendIdentity(SSHMixin, command.BaseCommand):
+    def take_action(self, parsed_args):
+        self.send_identity()
 
 
 class SSH(SSHMixin, command.BaseCommand):
