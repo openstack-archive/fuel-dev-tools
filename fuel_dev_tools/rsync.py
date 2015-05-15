@@ -31,7 +31,7 @@ class RsyncMixin(object):
         #)
 
         result = subprocess.check_output(
-            ['rsync', 'avz'] + list(args) + [source, target]
+            ['rsync', '-avz'] + list(args) + [source, target]
         )
 
         self.print_debug(result.decode('utf-8'))
