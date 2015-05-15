@@ -17,7 +17,6 @@ import six
 import subprocess
 
 import fabric
-from fabric import context_managers
 from fabric import api as fabric_api
 
 from fuel_dev_tools import command
