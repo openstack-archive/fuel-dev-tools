@@ -92,3 +92,14 @@ python-fuel-command-config:
     - source: salt://nailgun/client-config.yaml
     - require:
       - file: python-fuel-command-config-dir
+
+python-shotgun-command:
+  cmd.run:
+    - name: python setup.py develop
+    - cwd: /sources/fuel-web/shotgun
+
+generate-shotgun-config-command:
+  file.managed:
+    - name: /usr/bin/generate_shotgun_config
+    - source: salt://nailgun/generate_shotgun_config
+    - mode: 0777
