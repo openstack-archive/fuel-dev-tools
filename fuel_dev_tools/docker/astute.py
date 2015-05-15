@@ -98,6 +98,20 @@ class Rsync(DockerAstuteMixin, docker.RsyncCommand, docker.ShellCommand):
             raise
 
 
+class RsyncAgent(DockerAstuteMixin, docker.RsyncCommand):
+    """Rsync files to the Docker container."""
+    @property
+    def source_path(self):
+        return '.'
+
+    @property
+    def target_path(self):
+        return 'usr/libexec/mcollective/mcollective/agent'
+
+    def post_sync(self, parsed_args):
+        self.restart_container()
+
+
 class Start(DockerAstuteMixin, docker.StartCommand):
     """Start Docker container."""
 
