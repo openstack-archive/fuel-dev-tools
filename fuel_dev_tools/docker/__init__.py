@@ -241,7 +241,9 @@ class RsyncCommand(DockerMixin,
         # target is on the remote
         target = os.path.join(base_target_dir, self.target_path)
 
-        self.rsync(source, target)
+        target, args = self.build_app_args_target(target)
+
+        self.rsync(source, target, *args)
 
         self.post_sync(parsed_args)
 
