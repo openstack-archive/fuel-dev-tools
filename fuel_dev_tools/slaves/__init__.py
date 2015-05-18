@@ -15,14 +15,29 @@
 from fabric import api as fabric_api
 
 from fuel_dev_tools import cmd_parser
-from fuel_dev_tools import ssh
 
 
-class SlavesMixin(cmd_parser.CmdParserMixin, ssh.SSHMixin):
+class SlavesMixin(cmd_parser.CmdParserMixin):
     def discover_slaves(self):
         slaves = self.ssh_command('fuel', 'node')
 
         return self.parse_output(slaves)
+
+    def rsync_slave(self, slave, source, target):
+        self.print_debug('Syncing to slave {name} [{ip}]'.format(**slave))
+
+        target = ':{}'.format(target)
+
+        hop_args = [
+            '-e',
+            'ssh -A -t root@{} -p {} ssh -A -t root@{}'.format(
+                self.app_args.ip,
+                self.app_args.port,
+                slave['ip']
+            )
+        ]
+
+        self.rsync(source, target, *hop_args)
 
     def slave_command(self, slave, *cmd):
         cmd = [

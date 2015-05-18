@@ -48,21 +48,10 @@ class Rsync(slaves.SlavesMixin,
 
     def take_action(self, parsed_args):
         for slave in self.discover_slaves():
-            self.print_debug('Syncing to slave {name} [{ip}]'.format(**slave))
-
             source = parsed_args.source
-            target = ':{}'.format(self.target_for_slave(slave))
+            target = self.target_for_slave(slave)
 
-            hop_args = [
-                '-e',
-                'ssh -A -t root@{} -p {} ssh -A -t root@{}'.format(
-                    self.app_args.ip,
-                    self.app_args.port,
-                    slave['ip']
-                )
-            ]
-
-            self.rsync(source, target, *hop_args)
+            self.rsync_slave(slave, source, target)
 
             self.print_debug('Restarting mcollective')
             self.slave_command(slave, '/etc/init.d/mcollective', 'restart')
