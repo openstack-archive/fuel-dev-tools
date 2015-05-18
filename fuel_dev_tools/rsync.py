@@ -16,6 +16,18 @@ import subprocess
 
 
 class RsyncMixin(object):
+    def get_parser(self, prog_name):
+        parser = super(RsyncMixin, self).get_parser(prog_name)
+
+        parser.add_argument(
+            '-s', '--source',
+            nargs='?',
+            default='.',
+            help='Source of the rsync-ed directory.'
+        )
+
+        return parser
+
     def build_app_args_target(self, target):
         target = '{}@{}:{}'.format(self.app_args.user, self.app_args.ip, target)
         args = ['-e', 'ssh -p {}'.format(self.app_args.port)]

@@ -12,14 +12,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import os
-
-from fabric import api as fabric_api
-
 from fuel_dev_tools import docker
 
 
-class DockerMcollectiveMixin(object):
+class DockerMcollectiveMixin(docker.DockerMixin):
     container = 'mcollective'
     default_command = '/bin/bash'
 

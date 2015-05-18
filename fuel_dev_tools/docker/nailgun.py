@@ -18,7 +18,7 @@ from fuel_dev_tools import info
 from fuel_dev_tools import ssh
 
 
-class DockerNailgunMixin(object):
+class DockerNailgunMixin(docker.DockerMixin):
     container = 'nailgun'
     default_command = 'python'
 

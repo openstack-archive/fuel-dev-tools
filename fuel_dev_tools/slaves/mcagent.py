@@ -25,18 +25,6 @@ class Rsync(slaves.SlavesMixin,
             rsync.RsyncMixin,
             command.BaseCommand):
 
-    def get_parser(self, prog_name):
-        parser = super(Rsync, self).get_parser(prog_name)
-
-        parser.add_argument(
-            '-s', '--source',
-            nargs='?',
-            default='.',
-            help='Source of the rsync-ed directory.'
-        )
-
-        return parser
-
     def target_for_slave(self, slave):
         if slave['status'] in ['discover', 'error']:
             return '/usr/libexec/mcollective/mcollective/agent'

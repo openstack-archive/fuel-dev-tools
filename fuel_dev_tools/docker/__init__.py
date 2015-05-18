@@ -28,8 +28,12 @@ DOCKER_CONTAINER_PATH = '/var/lib/docker/containers/'
 DOCKER_DEVICEMAPPER_PATH = '/var/lib/docker/devicemapper/mnt/'
 
 
-class DockerMixin(object):
+class DockerMixin(ssh.SSHMixin):
     container = None
+    default_command = None
+
+    def get_log_directory(self):
+        return ''
 
     def container_command(self, *commands):
         return [
@@ -153,22 +157,22 @@ class DockerMixin(object):
         self.print_debug(result)
 
 
-class IdCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
+class IdCommand(command.BaseCommand):
     def take_action(self, parsed_args):
         six.print_(self.get_docker_id(get_exited=True))
 
 
-class ConfigCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
+class ConfigCommand(command.BaseCommand):
     def take_action(self, parsed_args):
         six.print_(json.dumps(self.get_container_config(), indent=2))
 
 
-class DirCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
+class DirCommand(command.BaseCommand):
     def take_action(self, parsed_args):
         six.print_(self.get_container_directory())
 
 
-class LogCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
+class LogCommand(command.BaseCommand):
     def get_log_directory(self):
         raise NotImplementedError('No log directory for this command')
 
@@ -192,14 +196,12 @@ class LogCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
         )
 
 
-class RestartCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
+class RestartCommand(command.BaseCommand):
     def take_action(self, parsed_args):
         self.restart_container()
 
 
-class RsyncCommand(DockerMixin,
-                   rsync.RsyncMixin,
-                   ssh.SSHMixin,
+class RsyncCommand(rsync.RsyncMixin,
                    command.BaseCommand):
     def pre_sync(self, parsed_args):
         pass
@@ -214,18 +216,6 @@ class RsyncCommand(DockerMixin,
     @property
     def target_path(self):
         return ''
-
-    def get_parser(self, prog_name):
-        parser = super(RsyncCommand, self).get_parser(prog_name)
-
-        parser.add_argument(
-            '-s', '--source',
-            nargs='?',
-            default='.',
-            help='Source of the rsync-ed directory.'
-        )
-
-        return parser
 
     def take_action(self, parsed_args):
         self.pre_sync(parsed_args)
@@ -248,7 +238,7 @@ class RsyncCommand(DockerMixin,
         self.post_sync(parsed_args)
 
 
-class ShellCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
+class ShellCommand(command.BaseCommand):
     default_command = None
 
     log = logging.getLogger(__name__)
@@ -282,17 +272,17 @@ class ShellCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
         )
 
 
-class StartCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
+class StartCommand(command.BaseCommand):
     def take_action(self, parsed_args):
         self.start_container()
 
 
-class StopCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
+class StopCommand(command.BaseCommand):
     def take_action(self, parsed_args):
         self.stop_container()
 
 
-class TailCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
+class TailCommand(command.BaseCommand):
     def get_log_directory(self):
         raise NotImplementedError('No log directory for this command')
 
@@ -314,7 +304,7 @@ class TailCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
         )
 
 
-class VolumesCommand(DockerMixin, ssh.SSHMixin, command.BaseCommand):
+class VolumesCommand(command.BaseCommand):
     def take_action(self, parsed_args):
         six.print_(
             json.dumps(

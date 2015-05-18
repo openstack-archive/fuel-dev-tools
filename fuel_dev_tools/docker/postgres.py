@@ -16,7 +16,7 @@ from fuel_dev_tools import docker
 from fuel_dev_tools import info
 
 
-class DockerPostgresMixin(object):
+class DockerPostgresMixin(docker.DockerMixin):
     container = 'postgres'
     default_command = 'su - postgres -c "psql -d nailgun"'
 
