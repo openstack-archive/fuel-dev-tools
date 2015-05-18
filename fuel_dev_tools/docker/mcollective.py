@@ -28,7 +28,7 @@ class DockerMcollectiveMixin(object):
 
 
 class RsyncAgent(DockerMcollectiveMixin, docker.RsyncCommand):
-    """Rsync files to the Docker container."""
+    """Rsync mcagent files to the Docker container."""
     @property
     def source_path(self):
         return '.'
@@ -40,3 +40,20 @@ class RsyncAgent(DockerMcollectiveMixin, docker.RsyncCommand):
     def post_sync(self, parsed_args):
         self.restart_container()
 
+
+class RsyncShotgun(DockerMcollectiveMixin, docker.RsyncCommand):
+    """Rsync shotgun files to the Docker container."""
+    @property
+    def source_path(self):
+        return 'shotgun/shotgun'
+
+    @property
+    def target_path(self):
+        return 'usr/lib/python2.6/site-packages/shotgun'
+
+    def post_sync(self, parsed_args):
+        self.restart_container()
+
+
+class Shell(DockerMcollectiveMixin, docker.ShellCommand):
+    """Shell into the container."""

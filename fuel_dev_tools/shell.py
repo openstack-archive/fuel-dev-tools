@@ -28,6 +28,7 @@ from cliff import app
 from cliff import commandmanager
 
 from fuel_dev_tools.docker import astute
+from fuel_dev_tools.docker import mcollective
 from fuel_dev_tools.docker import nailgun
 from fuel_dev_tools.docker import nginx
 from fuel_dev_tools.docker import postgres
@@ -56,6 +57,9 @@ COMMANDS = {
     'astute-volumes': astute.Volumes,
 
     'mcagent-rsync': mcagent.Rsync,
+
+    'mcollective-rsync-shotgun': mcollective.RsyncShotgun,
+    'mcollective-shell': mcollective.Shell,
 
     'nailgun-id': nailgun.Id,
     'nailgun-config': nailgun.Config,
