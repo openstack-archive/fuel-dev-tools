@@ -19,7 +19,7 @@ from fuel_dev_tools import docker
 from fuel_dev_tools import info
 
 
-class DockerAstuteMixin(object):
+class DockerAstuteMixin(docker.DockerMixin):
     container = 'astute'
     default_command = '/bin/bash'
 
@@ -30,7 +30,10 @@ class DockerAstuteMixin(object):
 class AstuteInfo(DockerAstuteMixin, info.BasicInfo):
     @classmethod
     def get_info(cls):
-        return 'Admin token is stored in /etc/fuel/astute.yaml on Fuel Main.'
+        return """Admin token is stored in /etc/fuel/astute.yaml on Fuel Main.
+
+If you want to send custom receiverd response from Astute: http://sprunge.us/UJfb
+        """
 
 
 class Id(DockerAstuteMixin, docker.IdCommand):

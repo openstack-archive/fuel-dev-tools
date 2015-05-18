@@ -36,6 +36,7 @@ from fuel_dev_tools.docker import rabbitmq
 from fuel_dev_tools.slaves import mcagent
 from fuel_dev_tools import exc
 from fuel_dev_tools import info
+from fuel_dev_tools import puppet
 from fuel_dev_tools import ssh
 
 
@@ -85,6 +86,8 @@ COMMANDS = {
     'postgres-stop': postgres.Stop,
     'postgres-tail': postgres.Tail,
     'postgres-volumes': postgres.Volumes,
+
+    'puppet-rsync': puppet.Rsync,
 
     'rabbitmq-id': rabbitmq.Id,
     'rabbitmq-config': rabbitmq.Config,

@@ -15,10 +15,9 @@
 from fuel_dev_tools import command
 from fuel_dev_tools import docker
 from fuel_dev_tools import info
-from fuel_dev_tools import ssh
 
 
-class DockerNailgunMixin(object):
+class DockerNailgunMixin(docker.DockerMixin):
     container = 'nailgun'
     default_command = 'python'
 
@@ -44,8 +43,6 @@ class Config(DockerNailgunMixin, docker.ConfigCommand):
 
 
 class DBReset(DockerNailgunMixin,
-              docker.DockerMixin,
-              ssh.SSHMixin,
               command.BaseCommand):
     """Reset the whole database to defaults."""
     def take_action(self, parsed_args):
@@ -79,7 +76,7 @@ CREATE DATABASE nailgun WITH OWNER nailgun;
         cmd = self.container_command('manage.py', 'syncdb')
         p.ssh_command(*cmd)
 
-        cmd = self.container_command('manage.py', 'loaddefault')
+        self.container_command('manage.py', 'loaddefault')
 
 
 class Dir(DockerNailgunMixin, docker.DirCommand):

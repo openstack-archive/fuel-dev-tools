@@ -19,7 +19,7 @@ from fuel_dev_tools import docker
 from fuel_dev_tools import info
 
 
-class DockerRabbitMQMixin(object):
+class DockerRabbitMQMixin(docker.DockerMixin):
     container = 'RabbitMQ'
     default_command = '/bin/bash'
 

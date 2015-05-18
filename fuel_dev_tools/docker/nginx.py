@@ -19,7 +19,7 @@ from fabric import api as fabric_api
 from fuel_dev_tools import docker
 
 
-class DockerNginxMixin(object):
+class DockerNginxMixin(docker.DockerMixin):
     container = 'nginx'
     default_command = '/bin/bash'
 
