@@ -95,7 +95,7 @@ class Rsync(DockerNailgunMixin, docker.RsyncCommand):
     """Rsync local directory to the Docker container."""
     @property
     def source_path(self):
-        return 'nailgun/nailgun'
+        return 'nailgun/nailgun/'
 
     @property
     def target_path(self):
