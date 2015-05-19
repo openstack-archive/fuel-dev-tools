@@ -1,0 +1,8 @@
+Verified+2: Jenkins
+Code-Review+2: Przemyslaw Kaminski <pkaminski@mirantis.com>
+Workflow+1: Przemyslaw Kaminski <pkaminski@mirantis.com>
+Submitted-by: Jenkins
+Submitted-at: Tue, 19 May 2015 11:10:12 +0000
+Reviewed-on: https://review.openstack.org/184225
+Project: stackforge/fuel-dev-tools
+Branch: refs/heads/master
