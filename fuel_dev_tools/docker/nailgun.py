@@ -101,6 +101,11 @@ class Rsync(DockerNailgunMixin, docker.RsyncCommand):
     def target_path(self):
         return 'usr/lib/python2.6/site-packages/nailgun'
 
+    def build_app_args_target(self, target):
+        target, args = super(Rsync, self).build_app_args_target(target)
+
+        return target, ['--exclude=*.pyc', '--exclude=test'] + args
+
     def post_sync(self, parsed_args):
         self.restart_container()
 
