@@ -36,6 +36,10 @@ Sometimes it might be necessary to repopulate the DB with fixtures, to do this j
 ./manage.py loaddefault # It loads all basic fixtures listed in settings.yaml
 ./manage.py loaddata nailgun/fixtures/sample_environment.json  # Loads fake nodes
 ```
+Also sometimes it might be neccessary to install frontend dependencies via
+
+```
+gulp bower
 
 As a shortut, a script `nailgun_clean_db.sh` is provided to reinitialize the database using the above commands.
 
