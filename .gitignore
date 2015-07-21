@@ -9,6 +9,7 @@
 dist
 build
 eggs
+.eggs
 parts
 bin
 var
@@ -51,3 +52,9 @@ ChangeLog
 *~
 .*.swp
 .*sw?
+
+# Vagrant
+vagrant/.vagrant
+
+# Fuel sources
+vagrant/sources
