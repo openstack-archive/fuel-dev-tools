@@ -75,6 +75,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     salt.minion_config = "salt_minion"
     salt.colorize = true
     salt.log_level = "all"
+    salt.bootstrap_options = "-P"
     #salt.run_highstate = true  # Uncomment if you want to automatically provision the box
 
   end
