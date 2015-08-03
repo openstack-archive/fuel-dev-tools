@@ -19,7 +19,7 @@ Command-line utility to help developers work with Fuel master.
 
 import logging
 import os
-from oslo.utils import encodeutils
+from oslo_utils import encodeutils
 import six
 import sys
 import traceback
