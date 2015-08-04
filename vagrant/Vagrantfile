@@ -72,12 +72,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   ## Use all the defaults:
   config.vm.provision :salt do |salt|
 
-    salt.minion_config = "salt_minion"
+    #salt.minion_config = "salt_minion"
     salt.colorize = true
     salt.log_level = "all"
     salt.bootstrap_options = "-P"
     #salt.run_highstate = true  # Uncomment if you want to automatically provision the box
 
   end
+
+  # Fix for Vagrant 1.7.5: https://github.com/mitchellh/vagrant/issues/5973
+  # Solution from https://github.com/mitchellh/vagrant/issues/5973#issuecomment-126102092
+  # After Vagrant is fixed, this can be removed and the line
+  # salt.minion_config = "salt_minion"
+  # uncommented above
+  config.vm.provision "shell",
+    inline: "sudo cp /etc/salt/minion{,-dist} && sudo cp /vagrant/salt_minion /etc/salt/minion"
 
 end
