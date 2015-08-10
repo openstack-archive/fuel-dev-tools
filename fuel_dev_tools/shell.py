@@ -37,6 +37,7 @@ from fuel_dev_tools.slaves import mcagent
 from fuel_dev_tools import exc
 from fuel_dev_tools import info
 from fuel_dev_tools import puppet
+from fuel_dev_tools import pythonclient
 from fuel_dev_tools import ssh
 
 
@@ -88,6 +89,8 @@ COMMANDS = {
     'postgres-volumes': postgres.Volumes,
 
     'puppet-rsync': puppet.Rsync,
+
+    'pythonclient-rsync': pythonclient.Rsync,
 
     'rabbitmq-id': rabbitmq.Id,
     'rabbitmq-config': rabbitmq.Config,

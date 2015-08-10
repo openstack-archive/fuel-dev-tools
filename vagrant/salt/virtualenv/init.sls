@@ -8,7 +8,6 @@ fuel-virtualenv-dir:
 fuel-virtualenv:
   virtualenv.managed:
     - name: {{ pillar['HOME'] }}/.virtualenvs/fuel
-    - group: {{ pillar['GROUP'] }}
     - user: {{ pillar['USER'] }}
     - require:
       - file: fuel-virtualenv-dir
