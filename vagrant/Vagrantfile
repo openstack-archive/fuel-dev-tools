@@ -61,6 +61,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Use VBoxManage to customize the VM. For example to change memory:
     vb.customize ["modifyvm", :id, "--ioapic", "on", "--memory", "1024"]
   end
+  # Example for libvirt:
+  #
+  config.vm.provider :libvirt do |libvirt, override|
+    override.vm.box = "baremettle/ubuntu-14.04"
+    override.vm.box_url = "https://atlas.hashicorp.com/baremettle/boxes/ubuntu-14.04"
+    override.vm.synced_folder './', '/vagrant', nfs: true, mount_options: ['rw', 'vers=3', 'tcp']
+    libvirt.memory = 1024
+  end
 
   ## For masterless, mount your salt file root
   config.vm.synced_folder "pillar/", "/srv/pillar/"
