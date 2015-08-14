@@ -12,7 +12,11 @@ Clone and `cd` into this repo then run
 ```
 vagrant up
 ```
-to start the Vagrant box.
+to start the Vagrant box (with the Virtualbox provider) or
+```
+vagrant up --provider=libvirt
+```
+to start with the `libvirt` provider.
 
 Then run
 ```
