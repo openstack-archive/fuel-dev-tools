@@ -37,3 +37,7 @@ class Rsync(rsync.RsyncMixin,
         self.print_debug('Rsyncing to master')
         self.rsync(source_dir, target, *args)
 
+    def build_app_args_target(self, target):
+        target, args = super(Rsync, self).build_app_args_target(target)
+
+        return target, ['--exclude=*.pyc'] + args
