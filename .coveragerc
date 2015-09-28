@@ -4,4 +4,4 @@ source = fuel-dev-tools
 omit = fuel-dev-tools/tests/*,fuel-dev-tools/openstack/*
 
 [report]
-ignore-errors = True
+ignore_errors = True
