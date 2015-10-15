@@ -61,8 +61,6 @@ class Rsync(DockerNginxMixin, docker.RsyncCommand):
 
         self.rsync(source, target, *args)
 
-        self.rsync(source, target)
-
     def build_gulp_static(self, source_dir):
         cwd = os.path.join(source_dir, 'nailgun')
 
