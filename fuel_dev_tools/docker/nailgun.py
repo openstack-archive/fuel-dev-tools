@@ -49,7 +49,8 @@ class DBReset(DockerNailgunMixin,
         from fuel_dev_tools.docker import postgres
 
         reset_sql = """
-SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE pid <> pg_backend_pid() AND datname = 'nailgun';
+SELECT pg_terminate_backend(pid) FROM pg_stat_activity
+WHERE pid <> pg_backend_pid() AND datname = 'nailgun';
 DROP DATABASE nailgun;
 CREATE DATABASE nailgun WITH OWNER nailgun;
         """

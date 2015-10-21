@@ -14,9 +14,9 @@
 
 import os
 
-from fuel_dev_tools import info
 from fuel_dev_tools import command
 from fuel_dev_tools import docker
+from fuel_dev_tools import info
 from fuel_dev_tools import rsync
 from fuel_dev_tools import ssh
 

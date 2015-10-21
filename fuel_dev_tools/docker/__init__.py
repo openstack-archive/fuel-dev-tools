@@ -37,13 +37,13 @@ class DockerMixin(ssh.SSHMixin):
 
     def container_command(self, *commands):
         return [
-            #'lxc-attach', '--name', self.get_full_docker_id()
+            # 'lxc-attach', '--name', self.get_full_docker_id()
             'docker', 'exec', self.get_docker_id()
         ] + list(commands)
 
     def container_command_interactive(self, *commands):
         return [
-            #'lxc-attach', '--name', self.get_full_docker_id()
+            # 'lxc-attach', '--name', self.get_full_docker_id()
             'docker', 'exec', '-it', self.get_docker_id()
         ] + list(commands)
 
