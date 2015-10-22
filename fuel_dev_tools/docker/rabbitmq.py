@@ -12,9 +12,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import six
-import subprocess
-
 from fuel_dev_tools import docker
 from fuel_dev_tools import info
 

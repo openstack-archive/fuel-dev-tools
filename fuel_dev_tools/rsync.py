@@ -29,7 +29,8 @@ class RsyncMixin(object):
         return parser
 
     def build_app_args_target(self, target):
-        target = '{}@{}:{}'.format(self.app_args.user, self.app_args.ip, target)
+        target = '{}@{}:{}'.format(self.app_args.user,
+                                   self.app_args.ip, target)
         args = ['-e', 'ssh -p {}'.format(self.app_args.port)]
 
         return target, args
@@ -37,10 +38,10 @@ class RsyncMixin(object):
     def rsync(self, source, target, *args):
         self.print_debug('RSYNC: %s --> %s' % (source, target))
 
-        #result = project.rsync_project(
+        # result = project.rsync_project(
         #    local_dir=source,
         #    remote_dir=target
-        #)
+        # )
 
         result = subprocess.check_output(
             ['rsync', '-avz'] + list(args) + [source, target]

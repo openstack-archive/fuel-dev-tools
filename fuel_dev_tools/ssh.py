@@ -33,7 +33,8 @@ class SSHMixin(object):
         super(SSHMixin, self).__init__(*args, **kwargs)
 
         if self.app_args:
-            fabric_api.env.host_string = '{0}:{1}'.format(self.app_args.ip, self.app_args.port)
+            fabric_api.env.host_string = '{0}:{1}'.format(self.app_args.ip,
+                                                          self.app_args.port)
             fabric_api.env.user = self.app_args.user
 
             if not self.app_args.debug:
@@ -41,8 +42,8 @@ class SSHMixin(object):
                     fabric.state.output[key] = False
 
     def send_identity(self):
-        self.print_debug('Sending identity %s for passwordless authentication' %
-                         self.app_args.identity_file)
+        self.print_debug('Sending identity %s for passwordless '
+                         'authentication' % self.app_args.identity_file)
 
         with open('%s.pub' % self.app_args.identity_file) as f:
             contents = f.read()
@@ -103,14 +104,14 @@ class SSHMixin(object):
         # NOTE: fabric's open_shell is broken: it's TERM or something like
         # that that breaks arrow keys for browsing history in Bash, etc.
 
-        #command = None
-
-        #if args:
-            #command = ' '.join(args)
-
-        #self.print_debug('interactive %s' % command)
-
-        #fabric_api.open_shell(command=command)
+        # command = None
+        #
+        # if args:
+        #     command = ' '.join(args)
+        #
+        # self.print_debug('interactive %s' % command)
+        #
+        # fabric_api.open_shell(command=command)
 
         commands = [
             'ssh', '-t',
