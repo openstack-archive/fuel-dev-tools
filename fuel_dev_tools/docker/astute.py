@@ -61,7 +61,8 @@ class Rsync(DockerAstuteMixin, docker.RsyncCommand, docker.ShellCommand):
     """Rsync local directory to the Docker container."""
 
     gemspec = 'astute.gemspec'
-    gemfile = 'astute-6.1.0.gem'
+    gemfile_template = 'astute-{}.gem'
+    gemfile = 'astute-8.0.0.gem'
 
     @property
     def source_path(self):
@@ -72,6 +73,7 @@ class Rsync(DockerAstuteMixin, docker.RsyncCommand, docker.ShellCommand):
         return 'tmp/%s' % self.gemfile
 
     def pre_sync(self, parsed_args):
+        self._update_gemfile(parsed_args.astute_version)
         self.build_gem(parsed_args.source)
 
     def post_sync(self, parsed_args):
@@ -100,6 +102,21 @@ class Rsync(DockerAstuteMixin, docker.RsyncCommand, docker.ShellCommand):
             six.print_('GEM BUILD ERROR')
             six.print_(e.output)
             raise
+
+    def get_parser(self, prog_name):
+        parser = super(Rsync, self).get_parser(prog_name)
+
+        parser.add_argument(
+            '-a', '--astute-version',
+            default='8.0.0',
+            help=('Astute gem version (default: 8.0.0). '
+                  'Change if master node version is changed.')
+        )
+
+        return parser
+
+    def _update_gemfile(self, version):
+        self.gemfile = self.gemfile_template.format(version)
 
 
 class RsyncAgent(DockerAstuteMixin, docker.RsyncCommand):
