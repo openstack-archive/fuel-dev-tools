@@ -1,0 +1,161 @@
+#!/usr/bin/env python
+
+import argparse
+from ipaddress import ip_network
+import os
+import shutil
+import sys
+import tempfile
+
+import paramiko
+import psycopg2
+import yaml
+
+
+def get_env_networks(name, host='localhost', user='fuel_devops',
+                     database='fuel_devops', password='fuel_devops'):
+    conn = psycopg2.connect(host=host, user=user, database=database,
+                            password=password)
+
+    cursor = conn.cursor()
+    cursor.execute('SELECT DISTINCT id FROM devops_environment WHERE name=%s',
+                   [name])
+    env_id = cursor.fetchone()[0]
+
+    cursor.execute(('SELECT name,ip_network FROM devops_network'
+                    ' WHERE environment_id=%s'), [env_id])
+    env_networks = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return dict(env_networks)
+
+
+def cidr_to_iprange(cidr, start=0, end=-1):
+    hosts = list(ip_network(cidr).hosts())
+
+    if start > 0:
+        start -= 1
+
+    if end != -1:
+        end -= 1
+
+    start_host = str(hosts[start])
+    end_host = str(hosts[end])
+
+    return (start_host, end_host)
+
+
+class MasterNode(object):
+    def __init__(self, ipaddress, port=22, username='root', password='r00tme'):
+        self.command = '/usr/bin/fuel {subcommand} --env-id {env_id} {action}'
+        self.tmpdir = tempfile.mkdtemp()
+        self.transport = paramiko.Transport(ipaddress, port)
+        self.transport.connect(username=username, password=password)
+
+        self.sftp = paramiko.SFTPClient.from_transport(self.transport)
+
+    def __exec(self, command):
+        session = self.transport.open_session()
+        session.exec_command(command)
+        exit_code = session.recv_exit_status()
+
+        if exit_code != 0:
+            error = ('Command {cmd} failed to execute correctly. '
+                     'Exit code: {exit_code}.')
+            raise RuntimeError(error.format(cmd=command, exit_code=exit_code))
+
+    def download(self, env_id=1):
+        command = self.command.format(subcommand='network', env_id=env_id,
+                                      action='--download')
+        self.__exec(command)
+
+        yamlfile = 'network_{}.yaml'.format(env_id)
+        src = os.path.join('/root', yamlfile)
+        dest = os.path.join(self.tmpdir, yamlfile)
+
+        self.sftp.get(src, dest)
+
+    def upload(self, env_id=1):
+        yamlfile = 'network_{}.yaml'.format(env_id)
+        src = os.path.join(self.tmpdir, yamlfile)
+        dest = os.path.join('/root', yamlfile)
+
+        self.sftp.put(src, dest)
+
+        command = self.command.format(subcommand='network', env_id=env_id,
+                                      action='--upload')
+        self.__exec(command)
+
+    def update_yaml(self, networks, yamlfile):
+        fuel_networks = frozenset(['public', 'management', 'storage',
+                                  'private'])
+
+        with open(yamlfile, 'r') as f:
+            cluster = yaml.safe_load(f)
+
+        for network in cluster['networks']:
+            network_name = network['name']
+
+            if network_name not in fuel_networks:
+                continue
+
+            cidr = networks[network_name]
+            iprange = cidr_to_iprange(cidr)
+
+            if 'cidr' in network:
+                network['cidr'] = cidr
+
+            if 'cidr' in network['meta']:
+                network['meta']['cidr'] = cidr
+
+            if network_name == 'public':
+                public_iprange = cidr_to_iprange(cidr, start=2, end=126)
+                floating_range = cidr_to_iprange(cidr, start=130)
+                public_gateway = cidr_to_iprange(cidr)[0]
+
+                network['ip_ranges'] = [public_iprange]
+                network['meta']['ip_range'] = public_iprange
+                network['gateway'] = public_gateway
+                cluster['networking_parameters']['floating_ranges'] = \
+                    [floating_range]
+            else:
+                network['ip_ranges'] = [iprange]
+
+        with open(yamlfile, 'w') as f:
+            yaml.safe_dump(cluster, f, default_flow_style=False)
+
+    def update(self, env_id, networks):
+        yamlfile = os.path.join(self.tmpdir, 'network_{}.yaml'.format(env_id))
+
+        self.download(env_id)
+        self.update_yaml(networks, yamlfile)
+        self.upload(env_id)
+        self.verify(env_id)
+
+    def verify(self, env_id=1):
+        command = self.command.format(subcommand='network', env_id=env_id,
+                                      action='--verify')
+        self.__exec(command)
+
+    def close(self):
+        self.sftp.close()
+        self.transport.close()
+        shutil.rmtree(self.tmpdir)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('environment_name',
+                        help='name of the environment to configure')
+    parser.add_argument('-i', '--id', default='1',
+                        help='ID of the cluster which network should be setup')
+    args = parser.parse_args()
+
+    networks = get_env_networks(args.environment_name)
+    master_node_address = cidr_to_iprange(networks['admin'], start=2)[0]
+    master_node = MasterNode(master_node_address)
+
+    master_node.update(args.id, networks)
+    master_node.close()
