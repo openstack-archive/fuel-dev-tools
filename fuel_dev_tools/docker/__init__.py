@@ -203,39 +203,12 @@ class RestartCommand(command.BaseCommand):
 
 class RsyncCommand(rsync.RsyncMixin,
                    command.BaseCommand):
-    def pre_sync(self, parsed_args):
-        pass
-
-    def post_sync(self, parsed_args):
-        pass
-
     @property
-    def source_path(self):
-        return ''
-
-    @property
-    def target_path(self):
-        return ''
-
-    def take_action(self, parsed_args):
-        self.pre_sync(parsed_args)
-
-        source_dir = parsed_args.source
-
-        base_target_dir = os.path.join(
+    def base_target_dir(self):
+        return os.path.join(
             self.get_container_directory(),
             'rootfs'
         )
-
-        source = os.path.join(source_dir, self.source_path)
-        # target is on the remote
-        target = os.path.join(base_target_dir, self.target_path)
-
-        target, args = self.build_app_args_target(target)
-
-        self.rsync(source, target, *args)
-
-        self.post_sync(parsed_args)
 
 
 class ShellCommand(command.BaseCommand):
