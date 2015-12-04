@@ -20,7 +20,14 @@ def get_env_networks(name, host='localhost', user='fuel_devops',
     cursor = conn.cursor()
     cursor.execute('SELECT DISTINCT id FROM devops_environment WHERE name=%s',
                    [name])
-    env_id = cursor.fetchone()[0]
+
+    env_id = cursor.fetchone()
+
+    if env_id is not None:
+        env_id = env_id[0]
+    else:
+        error = 'No environment named "{}" has been found.'.format(name)
+        raise NameError(error)
 
     cursor.execute(('SELECT name,ip_network FROM devops_network'
                     ' WHERE environment_id=%s'), [env_id])
