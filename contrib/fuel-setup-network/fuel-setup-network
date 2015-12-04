@@ -4,12 +4,15 @@ import argparse
 from ipaddress import ip_network
 import os
 import shutil
-import sys
 import tempfile
 
 import paramiko
 import psycopg2
 import yaml
+
+
+class EnvironmentDoesntExistException:
+    pass
 
 
 def get_env_networks(name, host='localhost', user='fuel_devops',
@@ -20,7 +23,14 @@ def get_env_networks(name, host='localhost', user='fuel_devops',
     cursor = conn.cursor()
     cursor.execute('SELECT DISTINCT id FROM devops_environment WHERE name=%s',
                    [name])
-    env_id = cursor.fetchone()[0]
+
+    env_id = cursor.fetchone()
+
+    if env_id is not None:
+        env_id = env_id[0]
+    else:
+        error = 'No environment named "{}" has been found.'.format(name)
+        raise EnvironmentDoesntExistException(error)
 
     cursor.execute(('SELECT name,ip_network FROM devops_network'
                     ' WHERE environment_id=%s'), [env_id])
