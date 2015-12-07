@@ -1,0 +1,10 @@
+Verified+2: Jenkins
+Code-Review+1: Bartłomiej Piotrowski <bpiotrowski@mirantis.com>
+Code-Review+1: Michal Rostecki <mrostecki@mirantis.com>
+Code-Review+2: Sylwester Brzeczkowski <sbrzeczkowski@mirantis.com>
+Workflow+1: Sylwester Brzeczkowski <sbrzeczkowski@mirantis.com>
+Submitted-by: Jenkins
+Submitted-at: Mon, 07 Dec 2015 14:02:11 +0000
+Reviewed-on: https://review.openstack.org/253550
+Project: openstack/fuel-dev-tools
+Branch: refs/heads/master
