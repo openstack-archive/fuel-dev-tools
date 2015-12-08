@@ -20,7 +20,6 @@ import six
 
 from fuel_dev_tools import command
 from fuel_dev_tools import exc
-from fuel_dev_tools import rsync
 from fuel_dev_tools import ssh
 
 
@@ -201,8 +200,7 @@ class RestartCommand(command.BaseCommand):
         self.restart_container()
 
 
-class RsyncCommand(rsync.RsyncMixin,
-                   command.BaseCommand):
+class RsyncCommand(command.RsyncCommand):
     @property
     def base_target_dir(self):
         return os.path.join(
