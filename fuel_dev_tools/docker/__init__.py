@@ -201,8 +201,7 @@ class RestartCommand(command.BaseCommand):
         self.restart_container()
 
 
-class RsyncCommand(rsync.RsyncMixin,
-                   command.BaseCommand):
+class RsyncCommand(command.RsyncCommand):
     @property
     def base_target_dir(self):
         return os.path.join(

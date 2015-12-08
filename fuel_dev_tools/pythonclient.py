@@ -19,9 +19,8 @@ from fuel_dev_tools import rsync
 from fuel_dev_tools import ssh
 
 
-class Rsync(rsync.RsyncMixin,
-            ssh.SSHMixin,
-            command.BaseCommand):
+class Rsync(ssh.SSHMixin,
+            command.RsyncCommand):
     """Rsync local CLI directory to the main machine."""
 
     def take_action(self, parsed_args):

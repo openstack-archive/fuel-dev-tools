@@ -22,8 +22,7 @@ from fuel_dev_tools import ssh
 
 class Rsync(slaves.SlavesMixin,
             ssh.SSHMixin,
-            rsync.RsyncMixin,
-            command.BaseCommand):
+            command.RsyncCommand):
 
     def target_for_slave(self, slave):
         if slave['status'] in ['discover', 'error']:

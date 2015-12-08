@@ -27,9 +27,8 @@ class PuppetInfo(info.BasicInfo):
         return ''
 
 
-class Rsync(rsync.RsyncMixin,
-            ssh.SSHMixin,
-            command.BaseCommand):
+class Rsync(ssh.SSHMixin,
+            command.RsyncCommand):
     """Rsync local directory to the Docker container."""
 
     def take_action(self, parsed_args):
