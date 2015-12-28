@@ -1,0 +1,10 @@
+Code-Review+1: venkatamahesh <venkatamaheshkotha@gmail.com>
+Code-Review+1: Igor Kalnitsky <ikalnitsky@mirantis.com>
+Code-Review+2: Sylwester Brzeczkowski <sbrzeczkowski@mirantis.com>
+Workflow+1: Sylwester Brzeczkowski <sbrzeczkowski@mirantis.com>
+Verified+2: Jenkins
+Submitted-by: Jenkins
+Submitted-at: Mon, 28 Dec 2015 19:24:00 +0000
+Reviewed-on: https://review.openstack.org/261660
+Project: openstack/fuel-dev-tools
+Branch: refs/heads/master
