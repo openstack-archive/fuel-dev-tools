@@ -1,20 +1,10 @@
-===============================
-fuel-dev-tools suite
-===============================
+This project is no longer maintained.
 
-Tools that make it easier to develop and work with OpenStack Fuel.
+The contents of this repository are still available in the Git
+source code management system.  To see the contents of this
+repository before it reached its end of life, please check out the
+previous commit with "git checkout HEAD^1".
 
-* Free software: Apache license
-* Bugs: http://bugs.launchpad.net/fuel-dev-tools
-
-Features
---------
-
-* Vagrant environment: https://github.com/stackforge/fuel-dev-tools/tree/master/vagrant
-* fuel-dev-tools command: https://github.com/stackforge/fuel-dev-tools/tree/master/fuel_dev_tools
-
-TODO
---------
-
-* add commands for managing VirtualBoxes -- move them from https://github.com/stackforge/fuel-main/tree/master/virtualbox
-* add tests for fuel-dev-tools command
+For any further questions, please email
+openstack-discuss@lists.openstack.org or join #openstack-dev on
+Freenode.

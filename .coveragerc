@@ -1,7 +1,0 @@
-[run]
-branch = True
-source = fuel-dev-tools
-omit = fuel-dev-tools/tests/*,fuel-dev-tools/openstack/*
-
-[report]
-ignore_errors = True
